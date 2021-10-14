@@ -46,10 +46,10 @@ RUN \
     | awk '/tag_name/{print $4;exit}' FS='[""]'); \
   fi && \
   curl -o \
-  /tmp/bookstack.tar.gz -L \
+    /tmp/bookstack.tar.gz -L \
     "https://github.com/BookStackApp/BookStack/archive/${BOOKSTACK_RELEASE}.tar.gz" && \
   tar xf \
-  /tmp/bookstack.tar.gz -C \
+    /tmp/bookstack.tar.gz -C \
     /var/www/html/ --strip-components=1 && \
   echo "**** install composer dependencies ****" && \
   composer install -d /var/www/html/ && \
