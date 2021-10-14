@@ -1,39 +1,33 @@
 ## Version 2018/03/06 - Changelog: https://github.com/linuxserver/docker-heimdall/commits/master/root/defaults/default
 
 server {
-	listen 80 default_server;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    listen 443 ssl http2 default_server;
+    listen [::]:443 ssl http2 default_server;
 
-	listen 443 ssl;
+    root /var/www/html/public;
+    index index.html index.htm index.php;
 
-	root /var/www/html/public;
-	index index.php index.html index.htm;
+    server_name _;
 
-	server_name _;
+    # all ssl related config moved to ssl.conf
+    include /config/nginx/ssl.conf;
 
-	ssl_certificate /config/keys/cert.crt;
-	ssl_certificate_key /config/keys/cert.key;
+    client_max_body_size 0;
 
-	client_max_body_size 0;
+    location / {
+        # enable the next two lines for http auth
+        #auth_basic "Restricted";
+        #auth_basic_user_file /config/nginx/.htpasswd;
 
-        error_page 599 = @noauth;
+        try_files $uri $uri/ /index.html /index.php?$args =404;
+    }
 
-        location @noauth {
-                try_files $uri $uri/ /index.php?$args;
-        }
-
-	location / {
-		try_files $uri $uri/ /index.php?$query_string;
-
-	}
-
-	location ~ \.php$ {
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-		# With php5-cgi alone:
-		fastcgi_pass 127.0.0.1:9000;
-		# With php5-fpm:
-		#fastcgi_pass unix:/var/run/php5-fpm.sock;
-		fastcgi_index index.php;
-		include /etc/nginx/fastcgi_params;
-
-	}
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include /etc/nginx/fastcgi_params;
+    }
 }
