@@ -12,7 +12,7 @@ mkdir -p \
 
 # check for .env and copy default if needed
 [[ ! -f "/config/www/.env" ]] && \
-    cp /var/www/html/.env.example /config/www/.env
+    cp /app/www/.env.example /config/www/.env
 
 # check for zero-length .env and alert user if found
 [[ ! -s "/config/www/.env" ]] && \
@@ -20,11 +20,11 @@ mkdir -p \
 
 # create symlinks
 symlinks=( \
-/var/www/html/storage/uploads/files \
-/var/www/html/storage/uploads/images \
-/var/www/html/public/uploads \
-/var/www/html/.env \
-/var/www/html/storage/logs/laravel.log
+/app/www/storage/uploads/files \
+/app/www/storage/uploads/images \
+/app/www/public/uploads \
+/app/www/.env \
+/app/www/storage/logs/laravel.log
 )
 
 for i in "${symlinks[@]}"
@@ -42,7 +42,7 @@ fi
 if [ ! -f "/config/BOOKSTACK_APP_KEY.txt" ];
     then
     echo "Generating BookStack app key for first run"
-    key=$(php /var/www/html/artisan key:generate --show)
+    key=$(php /app/www/artisan key:generate --show)
     echo $key > /config/BOOKSTACK_APP_KEY.txt
     echo "App Key set to $key you can modify the file to update /config/BOOKSTACK_APP_KEY.txt"
 elif [ -f "/config/BOOKSTACK_APP_KEY.txt" ];
@@ -81,7 +81,7 @@ if [ "${APP_URL}" != "${OLD_URL}" ]; then
     if [ "${OLD_URL}" != "http://example.com" ]; then
         echo "**** If this is an existing install, you should run the following line from your host terminal to update the database URL entries: ****"
         echo "************************************************************************"
-        echo "docker exec -it bookstack php /var/www/html/artisan bookstack:update-url ${OLD_URL} ${APP_URL}"
+        echo "docker exec -it bookstack php /app/www/artisan bookstack:update-url ${OLD_URL} ${APP_URL}"
         echo "************************************************************************"
     fi
 fi
@@ -107,7 +107,7 @@ done
 
 # update database - will set up database if fresh, or, migrate existing
 if [ -z "${CI_RUN+x}" ]; then
-    php /var/www/html/artisan migrate --force
+    php /app/www/artisan migrate --force
 fi
 
 # set permissions

@@ -40,7 +40,7 @@ RUN \
   echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /etc/php7/php-fpm.conf && \
   echo "**** fetch bookstack ****" && \
   mkdir -p\
-    /var/www/html && \
+    /app/www && \
   if [ -z ${BOOKSTACK_RELEASE+x} ]; then \
     BOOKSTACK_RELEASE=$(curl -sX GET "https://api.github.com/repos/bookstackapp/bookstack/releases/latest" \
     | awk '/tag_name/{print $4;exit}' FS='[""]'); \
@@ -50,9 +50,9 @@ RUN \
     "https://github.com/BookStackApp/BookStack/archive/${BOOKSTACK_RELEASE}.tar.gz" && \
   tar xf \
     /tmp/bookstack.tar.gz -C \
-    /var/www/html/ --strip-components=1 && \
+    /app/www/ --strip-components=1 && \
   echo "**** install composer dependencies ****" && \
-  composer install -d /var/www/html/ && \
+  composer install -d /app/www/ && \
   echo "**** overlay-fs bug workaround ****" && \
   mv /var/www /var/www-tmp && \
   echo "**** cleanup ****" && \
