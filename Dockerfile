@@ -11,10 +11,12 @@ LABEL maintainer="homerr"
 ARG BOOKSTACK_RELEASE
 
 RUN \
-  echo "**** install packages ****" && \
+  echo "**** install build packages ****" && \
+  apk add --no-cache --virtual=build-dependencies \
+    composer && \
+  echo "**** install runtime packages ****" && \
   apk add --no-cache  \
     curl \
-    composer \
     fontconfig \
     memcached \
     netcat-openbsd \
@@ -56,6 +58,8 @@ RUN \
   echo "**** overlay-fs bug workaround ****" && \
   mv /var/www /var/www-tmp && \
   echo "**** cleanup ****" && \
+  apk del --purge \
+    build-dependencies && \
   rm -rf \
     /root/.composer \
     /tmp/*
