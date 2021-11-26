@@ -54,7 +54,7 @@ RUN \
   composer install -d /var/www/html/ && \
   echo "**** overlay-fs bug workaround ****" && \
   mv /var/www /var/www-tmp && \
-  chown -R 1000910000:0 /var/www-tmp
+  chown -R 1000910000:0 /var/www-tmp && \
   echo "**** cleanup ****" && \
   rm -rf \
     /root/.composer \
