@@ -1,5 +1,4 @@
 FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.14
-USER 1000910000
 # set version label
 ARG BUILD_DATE
 ARG VERSION
@@ -55,12 +54,13 @@ RUN \
   composer install -d /var/www/html/ && \
   echo "**** overlay-fs bug workaround ****" && \
   mv /var/www /var/www-tmp && \
+  chown -R 1000910000:0 /var/www-tmp
   echo "**** cleanup ****" && \
   rm -rf \
     /root/.composer \
     /tmp/*
 
 COPY root/ /
-
+USER 1000910000
 VOLUME /config
 EXPOSE 80
