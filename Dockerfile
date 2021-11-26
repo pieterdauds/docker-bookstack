@@ -61,6 +61,6 @@ RUN \
     /tmp/*
 
 COPY root/ /
-USER 1000910000
+USER root
 VOLUME /config
 EXPOSE 80
