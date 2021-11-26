@@ -1,5 +1,5 @@
 FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.14
-
+USER 1000910000
 # set version label
 ARG BUILD_DATE
 ARG VERSION
